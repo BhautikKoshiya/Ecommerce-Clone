@@ -18,7 +18,7 @@ const CreateProduct = () => {
     const [category, setCategory] = useState("")
     const [shipping, setShipping] = useState("")
 
-
+    console.log(shipping);
     const { Option } = Select
     const navigate = useNavigate()
     //getAll Categories

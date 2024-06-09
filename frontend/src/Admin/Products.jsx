@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react'
 import AdminMenu from '../components/Layout/AdminMenu'
 import Layout from '../components/Layout/Layout'
 import axios from 'axios'
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { BASE_URL } from '../Helpers/helper'
 
 const Products = () => {
     const [products, setProducts] = useState([])
 
-    const navigate = useNavigate()
 
     //getAllProducts API
     const getAllProducts = async () => {

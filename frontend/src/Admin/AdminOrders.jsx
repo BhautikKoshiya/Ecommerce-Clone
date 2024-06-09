@@ -11,7 +11,6 @@ import {BASE_URL} from "../Helpers/helper"
 
 const AdminOrders = () => {
     const [status, setStatus] = useState(["Not Process", "Processing", "Shipped", "Delivered", "Cancel"])
-    const [changeStatus, setChangeStatus] = useState("")
     const [orders, setOrders] = useState([])
     const [auth, setAuth] = useAuth()
 
@@ -34,7 +33,7 @@ const AdminOrders = () => {
     // handleOrderStatus
     const handleOrderStatus = async (orderId, value) => {
         try {
-            const { data } = await axios.put(`${BASE_URL}/api/v1/auth/order-status/${orderId}`, { status: value }, {
+            await axios.put(`${BASE_URL}/api/v1/auth/order-status/${orderId}`, { status: value }, {
                 headers: {
                     Authorization: `Bearer ${auth?.token}`
                 }
