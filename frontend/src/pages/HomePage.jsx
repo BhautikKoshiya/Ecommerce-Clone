@@ -41,7 +41,7 @@ const HomePage = () => {
             <div className="container mt-3">
                 <div className="top-image-container">
                     <Link to="/all-products">
-                        <img src={Flat500off} alt="Flat500off" className="img-fluid bordered-img" />
+                        <img src={Flat500off} alt="Flat500off" className="img-fluid bordered-img " />
                     </Link>
                     <Link to="/all-products">
                         <img src={HPSaveOnSale} alt="Save On Sale" className="img-fluid bordered-img" />
