@@ -86,8 +86,5 @@ Step-by-step instructions on how to install and run this project locally
   
 ![SEAdminpanel](https://github.com/VinodHadmode/ShopEasy-Ecommerce-App/assets/112760695/2ddd94ff-0edc-4ccd-b3c7-ae3ffe9b7c45)
 
-## Feedback
-
-If you have any feedback, please reach out to me at vinodhadmode@gmail.com
 
 
