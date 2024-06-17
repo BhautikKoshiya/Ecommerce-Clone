@@ -58,19 +58,19 @@ Step-by-step instructions on how to install and run this project locally
 
 ### All Product
   
-![SEAllProducts](./assets/Products.png)
+![SEAllProducts](./assets/Products1.png)
 
 ### Categorywise Product page
   
-![SECatwiseproduct](./assets/Category%20wise%20products.png)
+![SECatwiseproduct](./assets/Category%20wise%20products1.png)
 
 ### Product details page
   
-![SEProductdetails](./assets/Product%20Details.png)
+![SEProductdetails](./assets/Product%20Details1.png)
 
 ### Cart page
   
-![SECartpage](./assets/Cart.png)
+![SECartpage](./assets/Cart1.png)
 
 ### Login page
   
@@ -82,11 +82,11 @@ Step-by-step instructions on how to install and run this project locally
 
 ### User dashboard
   
-![SEUserdashboard](./assets/User%20Dashboard.png)
+![SEUserdashboard](./assets/User%20Dashboard1.png)
 
 ### Admin Panel
   
-![SEAdminpanel](./assets/Admin%20panel.png)
+![SEAdminpanel](./assets/Admin%20panel1.png)
 
 
 
