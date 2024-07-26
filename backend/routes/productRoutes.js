@@ -28,7 +28,7 @@ productRouter.get("/get-product", getProductController)
 productRouter.get("/single-product/:id", getSingleProductController)
 
 //4. product photo
-productRouter.get("/product-photo/:pid", productPhotoController)
+productRouter.get("/single-product//:pid", productPhotoController)
 
 //5. delete product
 productRouter.delete("/delete-product/:pid", productDeleteController)

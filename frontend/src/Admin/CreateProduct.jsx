@@ -24,10 +24,11 @@ const CreateProduct = () => {
     //getAll Categories
     const getAllCategory = async () => {
         try {
-            const { data } = await axios.get(`${BASE_URL}/api/v1/category/get-category`)
+            const { data } = await axios.get(`${BASE_URL}/getCategory`)
+            console.log("2 ", JSON.parse(data.body).categories);
 
-            if (data?.success) {
-                setCategories(data.categories)
+            if (JSON.parse(data.body).success) {
+                setCategories(JSON.parse(data.body).categories)
             }
 
         } catch (error) {
@@ -38,57 +39,102 @@ const CreateProduct = () => {
 
     useEffect(() => {
         getAllCategory()
+        console.log("selected", category)
     }, [])
 
     //handleCreateProduct
     const handleCreateProduct = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
         const form = e.target.closest('form');
-
+    
         // Check form validity
         if (!form.checkValidity()) {
             form.reportValidity();
             return;
         }
+    
         try {
-            const productData = new FormData()
-            productData.append("name", name)
-            productData.append("description", description)
-            productData.append("price", price)
-            productData.append("photo", photo)
-            productData.append("quantity", quantity)
-            productData.append("category", category)
+            // Convert image file to base64
+            let imageBase64 = "";
+            if (photo) {
+                const reader = new FileReader();
+                reader.readAsDataURL(photo);
+                reader.onloadend = async () => {
+                    imageBase64 = reader.result;
+    
+                    // Prepare JSON payload
+                    const productData = {
+                        name,
+                        description,
+                        price,
+                        category,
+                        quantity,
+                        image: imageBase64,
+                        shipping
+                    };
+    
+                    // Send request
+                    const res  = await axios.post(`${BASE_URL}/createProduct`, productData, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    });
 
 
-            console.log("productData", productData);
-
-            const { data } = await axios.post(`${BASE_URL}/api/v1/product/create-product`, productData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${auth?.token}`
+                    if (res.data.statusCode === 200) {
+                        message.success(JSON.parse(res.data.body).message);
+                        navigate("/dashboard/admin/products");
+                    } else {
+                        message.error(res.error || "Something Went Wrong While Creating New Product!!");
                     }
-                })
-            if (data?.success) {
-                console.log(data.message);
-                message.success(data.message);
-                navigate("/dashboard/admin/products")
-
+    
+                    // Clear form fields
+                    setName("");
+                    setDescription("");
+                    setPrice("");
+                    setPhoto("");
+                    setCategory("");
+                    setQuantity("");
+                    setShipping("");
+                };
             } else {
-                message.error(data.error || "Something Went Wrong While Creating New Product!!");
-            }
+                // Handle case where no image is provided
+                const productData = {
+                    name,
+                    description,
+                    price,
+                    category,
+                    quantity,
+                    shipping
+                };
+    
+                const res = await axios.post(`${BASE_URL}/createProduct`, productData, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
 
+
+                if (res.data.statusCode === 200) {
+                    message.success(JSON.parse(res.data.body).message);
+                    navigate("/dashboard/admin/products");
+                } else {
+                    message.error(res.error || "Something Went Wrong While Creating New Product!!");
+                }
+    
+                // Clear form fields
+                setName("");
+                setDescription("");
+                setPrice("");
+                setPhoto("");
+                setCategory("");
+                setQuantity("");
+                setShipping("");
+            }
         } catch (error) {
             console.log(error);
-            message.error("Something Went Wrong While Creating New Product!!")
+            message.error("Something Went Wrong While Creating New Product!!");
         }
-
-        //form empty
-        setName("")
-        setDescription("")
-        setPrice("")
-        setPhoto("")
-        setCategory("")
-        setQuantity("")
     }
 
     return (
@@ -108,11 +154,13 @@ const CreateProduct = () => {
                                     size='large'
                                     showSearch
                                     className='form-select mb-3'
-                                    onChange={(value) => { setCategory(value) }}
+                                    onChange={(value) => { setCategory(value)
+                                        console.log("selected  ", value);
+                                     }}
                                 >
                                     {
                                         categories?.map((c) => {
-                                            return <Option key={c._id} value={c._id}>{c.name}</Option>
+                                            return <Option key={c.id} value={c.name}>{c.name}</Option>
                                         })
                                     }
 

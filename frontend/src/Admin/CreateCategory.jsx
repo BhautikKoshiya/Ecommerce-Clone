@@ -20,19 +20,16 @@ const CreateCategory = () => {
         e.preventDefault();
         try {
             const res = await axios.post(
-                `${BASE_URL}/api/v1/category/create-category`,
+                `${BASE_URL}/CreateCategory`,
                 { name },
-                {
-                    headers: {
-                        Authorization: `Bearer ${auth?.token}`
-                    }
-                }
             );
-            if (res.data?.success) {
-                message.success(`${res.data.message}`);
+            console.log("res categpry", res);
+            if (res.data.statusCode == 200) {
+
+                message.success(`${JSON.parse(res.data.body).message}`);
                 getAllCategory();
             } else {
-                message.error(`${res.data.message}`);
+                message.error(`${JSON.parse(res.data.body).message}`);
             }
         } catch (error) {
             console.log(error);
@@ -45,10 +42,10 @@ const CreateCategory = () => {
     //getAll categories
     const getAllCategory = async () => {
         try {
-            const res = await axios.get(`${BASE_URL}/api/v1/category/get-category`)
-
+            const res = await axios.get(`${BASE_URL}/getCategory`)
+            console.log("1 ", res);
             if (res.data) {
-                setCategories(res.data.categories)
+                setCategories(JSON.parse(res.data.body).categories)
             }
 
         } catch (error) {
@@ -65,7 +62,7 @@ const CreateCategory = () => {
     const handleEditCategory = (category) => {
         setVisible(true)
         setUpdatedName(category.name)
-        setSelected(category._id)
+        setSelected(category.id)
     }
 
     //handleUpdateSubmit
@@ -130,17 +127,17 @@ const CreateCategory = () => {
                                 <thead className="thead-dark">
                                     <tr>
                                         <th scope="col">Name</th>
-                                        <th scope="col">Actions</th>
+                                        {/* <th scope="col">Actions</th> */}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {categories?.map((category) => (
-                                        <tr key={category._id}>
+                                        <tr key={category.id}>
                                             <td>{category.name}</td>
-                                            <td>
+                                            {/* <td>
                                                 <button className="btn btn-outline-primary ms-2" onClick={() => handleEditCategory(category)}>Edit</button>
                                                 <button className="btn btn-outline-danger ms-2" onClick={() => { handleDeleteCategory(category._id) }}>Delete</button>
-                                            </td>
+                                            </td> */}
                                         </tr>
                                     ))}
                                     {categories && categories.length === 0 && (

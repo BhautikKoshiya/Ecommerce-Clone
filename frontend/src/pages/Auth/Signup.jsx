@@ -20,11 +20,13 @@ const Signup = () => {
 
     //form submit
     const handleSubmit = async (e) => {
+    
         e.preventDefault()
         try {
 
-            const res = await axios.post(`${BASE_URL}/api/v1/auth/register`, { name, email, password, phone, address })
-            if (res.data.success) {
+            const res = await axios.post(`${BASE_URL}/register`, { name, email, password, phone, address })
+            console.log("response", res);
+            if (res.data.statusCode == 200) {
                 message.success(res.data.message)
                 navigate("/login")
             } else {

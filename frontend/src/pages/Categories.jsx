@@ -7,7 +7,7 @@ import "./Categories.css"
 
 const Categories = () => {
     const categories = useCategory()
-    console.log("categories",categories);
+    console.log("categories bk",categories);
     return (
         <Layout>
             <div className="container">
@@ -15,7 +15,7 @@ const Categories = () => {
                     {
                         categories.map((c) => {
                             return (
-                                <div className="col-md-4 mt-5 mb-3 gx-2 gy-2" key={c._id}>
+                                <div className="col-md-4 mt-5 mb-3 gx-2 gy-2" key={c.id}>
                                     <Link to={`/category/${c.slug}`} className="btn button-56">
                                         {c.name}
                                     </Link>

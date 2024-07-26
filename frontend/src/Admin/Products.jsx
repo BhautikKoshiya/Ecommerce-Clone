@@ -12,13 +12,13 @@ const Products = () => {
     //getAllProducts API
     const getAllProducts = async () => {
         try {
-            const { data } = await axios.get(`${BASE_URL}/api/v1/product/get-product`)
-
-            if (data?.success) {
-                setProducts(data.products)
+            const res  = await axios.get(`${BASE_URL}/getProduct`)
+            console.log("fetch product", res.data.body.success);
+            if (res.data.body.success) {
+                setProducts(res.data.body.products)
             } else {
-                console.log(data.message);
-                alert(data.message)
+                console.log(res.data.body.message);
+                alert(res.data.body.message)
             }
 
         } catch (error) {
@@ -44,14 +44,14 @@ const Products = () => {
                             {
                                 products?.map((p) => (
                                     <Link
-                                        key={p._id}
-                                        to={`/dashboard/admin/product/${p._id}`}
+                                        key={p.id}
+                                        // to={`/dashboard/admin/product/${p.id}`}
                                         className='product-link'
                                     >
                                         <div className="col">
                                             <div className="card h-100">
                                                 <img
-                                                    src={`${BASE_URL}/api/v1/product/product-photo/${p._id}`}
+                                                    src={p.imageUrl}
                                                     className="card-img-top p-3"
                                                     alt={p.name}
                                                     style={{ objectFit: 'cover', height: '200px' }}

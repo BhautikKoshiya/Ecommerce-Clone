@@ -22,19 +22,24 @@ const Login = () => {
         e.preventDefault()
         try {
 
-            const res = await axios.post(`${BASE_URL}/api/v1/auth/login`, { email, password })
-            if (res.data.success) {
-                message.success(res.data.message || "login succes")
+            const res = await axios.post(`${BASE_URL}/login`, { email, password })
+            console.log("res login", res);
+            console.log("res.data.body.message", JSON.parse(res.data.body).message);
+
+            if (res.data.statusCode == 200) {
+                console.log("aaaaaa inside if loop");
+                message.success(JSON.parse(res.data.body).message || "login succes")
                 setAuth({
                     ...auth,
-                    user: res.data.user,
-                    token: res.data.token
+                    user: JSON.parse(res.data.body).user,
+                    token: JSON.parse(res.data.body).token
                 })
+                console.log("before");
 
-                localStorage.setItem("authData", JSON.stringify(res.data))
+                localStorage.setItem("authData", res.data.body)
                 navigate(location.state || "/")
             } else {
-                console.log(res.data.message);
+                console.log(JSON.parse(res.data.body).user);
                 message.error("Login failed, Enter correct credentials!!")
             }
 

@@ -9,8 +9,10 @@ const useCategory = () => {
     //getAll categories
     const getAllCategory = async () => {
         try {
-            const { data } = await axios.get(`${BASE_URL}/api/v1/category/get-category`)
-            setCategories(data?.categories)
+            const { data } = await axios.get(`${BASE_URL}/getCategory`)
+            console.log("4 ", JSON.parse(data.body).categories);
+
+            setCategories(JSON.parse(data?.body).categories)
         } catch (error) {
             console.log(error);
         }

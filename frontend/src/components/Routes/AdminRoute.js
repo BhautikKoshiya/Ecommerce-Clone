@@ -12,16 +12,20 @@ const AdminRoute = () => {
     useEffect(() => {
         const authCheck = async () => {
             try {
-                const response = await fetch(`${BASE_URL}/api/v1/auth/admin-auth`, {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${auth?.token}`
-                    }
-                });
+                // const response = await fetch(`${BASE_URL}/api/v1/auth/admin-auth`, {
+                //     method: 'GET',
+                //     headers: {
+                //         Authorization: `Bearer ${auth?.token}`
+                //     }
+                // });
+                const role = localStorage.getItem("authData");
+                const jsonObject = JSON.parse(role);
 
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.ok) {
+                // console.log("user role check", jsonObject.user.role);
+
+                if (jsonObject.user.role === 1) {
+                    // const data = await response.json();
+                    if (jsonObject.user.role === 1) {
                         setOk(true);
                     } else {
                         setOk(false);

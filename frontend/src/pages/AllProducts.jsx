@@ -25,7 +25,7 @@ const AllProducts = () => {
   //getAll categories
   const getAllCategory = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/api/v1/category/get-category`)
+      const res = await axios.get(`${BASE_URL}/getCategory`)
 
       if (res.data) {
         setCategories(res.data.categories)
@@ -41,14 +41,13 @@ const AllProducts = () => {
   const getAllProducts = async () => {
     try {
       setLoading(true)
-      const { data } = await axios.get(`${BASE_URL}/api/v1/product/product-list/${page}`)
-
-      if (data?.success) {
-        setProducts(data.products)
+      const  res  = await axios.get(`${BASE_URL}/getProduct`)
+      
+      if (res.data.body.success) {
+        setProducts(res.data.body.products)
         setLoading(false)
 
       } else {
-        console.log(data.message);
       }
 
     } catch (error) {
@@ -58,53 +57,53 @@ const AllProducts = () => {
   }
 
   //getFilteredProducts
-  const getFilteredProducts = async () => {
-    try {
-      console.log("Checked:", checked);
-      console.log("Radio:", radio);
+  // const getFilteredProducts = async () => {
+  //   try {
+  //     console.log("Checked:", checked);
+  //     console.log("Radio:", radio);
 
-      const { data } = await axios.post(`${BASE_URL}/api/v1/product/filter-product`, { checked, radio })
+  //     const { data } = await axios.post(`${BASE_URL}/api/v1/product/filter-product`, { checked, radio })
 
-      if (data?.success) {
-        setProducts(data.filteredProducts)
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  //     if (data?.success) {
+  //       setProducts(data.filteredProducts)
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
   //getTotal product count
-  const getTotalProductCount = async () => {
-    try {
-      const { data } = await axios.get(`${BASE_URL}/api/v1/product/count-product`)
-      if (data?.success) {
-        setTotal(data.totalCount)
-      }
+  // const getTotalProductCount = async () => {
+  //   try {
+  //     const { data } = await axios.get(`${BASE_URL}/api/v1/product/count-product`)
+  //     if (data?.success) {
+  //       setTotal(data.totalCount)
+  //     }
 
-    } catch (error) {
-      console.log(error);
+  //   } catch (error) {
+  //     console.log(error);
 
-    }
-  }
+  //   }
+  // }
 
   //load more products
-  const loadMoreProducts = async () => {
-    try {
-      setLoading(true)
-      const { data } = await axios.get(`${BASE_URL}/api/v1/product/product-list/${page}`)
+  // const loadMoreProducts = async () => {
+  //   try {
+  //     setLoading(true)
+  //     const { data } = await axios.get(`${BASE_URL}/api/v1/product/product-list/${page}`)
 
-      if (data?.success) {
-        setProducts([...products, ...data?.products])
-        setLoading(false)
+  //     if (data?.success) {
+  //       setProducts([...products, ...data?.products])
+  //       setLoading(false)
 
-      } else {
-        console.log(data.message);
-      }
-    } catch (error) {
-      console.log(error);
-      setLoading(false)
-    }
-  }
+  //     } else {
+  //       console.log(data.message);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     setLoading(false)
+  //   }
+  // }
 
   //filter by category
   const handleFilter = (value, id) => {
@@ -133,13 +132,15 @@ const AllProducts = () => {
   //all useEffect hooks
   useEffect(() => {
     getAllCategory()
-    getTotalProductCount()
+    console.log("Product", products);
+
+    // getTotalProductCount()
   }, [])
 
-  useEffect(() => {
-    if (page === 1) return
-    loadMoreProducts()
-  }, [page])
+  // useEffect(() => {
+  //   if (page === 1) return
+  //   loadMoreProducts()
+  // }, [page])
 
   useEffect(() => {
     if (!checked.length || !radio.length) {
@@ -147,23 +148,23 @@ const AllProducts = () => {
     }
   }, [checked.length, radio.length]);
 
-  useEffect(() => {
-    if (checked.length || radio.length) {
-      getFilteredProducts();
-    }
-  }, [checked, radio]);
+  // useEffect(() => {
+  //   if (checked.length || radio.length) {
+  //     getFilteredProducts();
+  //   }
+  // }, [checked, radio]);
 
   return (
     <Layout>
       <div className="row mt-3">
-        <div className="col-md-3" style={{ borderRight: "1px solid #ccc" }}>
+        {/* <div className="col-md-3" style={{ borderRight: "1px solid #ccc" }}>
           <div></div>
           <h5 className="text-center mt-3">Filter by Category</h5>
           <div className="d-flex flex-column">
             {
               categories?.map((category) => {
                 return (
-                  <Checkbox key={category._id} onChange={(e) => handleFilter(e.target.checked, category._id)}>{category.name}</Checkbox>
+                  <Checkbox key={category.id} onChange={(e) => handleFilter(e.target.checked, category.id)}>{category.name}</Checkbox>
                 )
               })
             }
@@ -174,7 +175,7 @@ const AllProducts = () => {
               {
                 Prices.map((p) => {
                   return (
-                    <div key={p._id}>
+                    <div key={p.id}>
                       <Radio value={p.array}>{p.name}</Radio>
                     </div>
                   )
@@ -187,17 +188,17 @@ const AllProducts = () => {
             <button className="btn btn-outline-danger" onClick={() => window.location.reload()}>RESET FILTERS</button>
           </div>
 
-        </div>
+        </div> */}
 
         <div className="col-md-9">
           <h3 className="text-center">All Products</h3>
           <div className="row row-cols-1 row-cols-md-3 g-4">
             {
               products?.map((p) => (
-                <div className="col" key={p._id}>
+                <div className="col" key={p.id}>
                   <div className="card h-100">
                     <img
-                      src={`${BASE_URL}/api/v1/product/product-photo/${p._id}`}
+                      src={p.imageUrl}
                       className="card-img-top p-3"
                       alt={p.name}
                       style={{ objectFit: 'cover', height: '200px' }}
@@ -207,7 +208,7 @@ const AllProducts = () => {
                       <h5 className="price-text"><span style={{ color: 'green' }}>${p.price}</span></h5>
                       <p className="card-text">{p.description.substring(0, 30)}...</p>
                       <div className="d-flex justify-content-between">
-                        <button type="button" className="btn btn-outline-primary btn-sm" onClick={() => navigate(`/product/${p._id}`)}>
+                        <button type="button" className="btn btn-outline-primary btn-sm" onClick={() => navigate(`/product/${p.id}`)}>
                           MORE DETAILS
                         </button>
                         <div style={{ width: '10px' }}></div>
@@ -225,13 +226,13 @@ const AllProducts = () => {
           <div className="m-2 p-3 text-center">
             {products && products.length > 0 && checked.length === 0 && radio.length === 0 ? (
               <button className="btn btn-warning" onClick={handleLoadMore}>
-                {loading ? (
+                {loading ?  (
                   <div className="d-flex justify-content-center">
                     <div className="spinner-border" role="status">
                       <span className="visually-hidden">Loading...</span>
                     </div>
                   </div>
-                ) : 'Load More'}
+                ) : ''}
               </button>
             ) : (
               checked.length === 0 && radio.length === 0 && (

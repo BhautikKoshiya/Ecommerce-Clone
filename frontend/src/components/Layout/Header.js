@@ -46,7 +46,7 @@ const Header = () => {
                                 <NavLink to="/all-products" className="nav-link" aria-current="page" >All Products</NavLink>
                             </li>
 
-                            <li className="nav-item">
+                            {/* <li className="nav-item">
                                 <NavLink to="/category/mens" className="nav-link" aria-current="page" >MEN</NavLink>
                             </li>
 
@@ -60,7 +60,7 @@ const Header = () => {
 
                             <li className="nav-item">
                                 <NavLink to="/category/beauty" className="nav-link" aria-current="page" >BEAUTY</NavLink>
-                            </li>
+                            </li> */}
 
                             <li className="nav-item dropdown">
                                 <Link
@@ -76,7 +76,7 @@ const Header = () => {
                                     {
                                         categories?.map((c) => {
                                             return (
-                                                <li key={c._id}>
+                                                <li key={c.id}>
                                                     <Link to={`/category/${c.slug}`} className="dropdown-item">{c.name}</Link>
                                                 </li>
                                             )
@@ -88,9 +88,9 @@ const Header = () => {
                         </ul>
 
                         <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-                            <li className="me-4">
+                            {/* <li className="me-4">
                                 <SearchInput />
-                            </li>
+                            </li> */}
 
                             {!auth.user ? (
                                 <>

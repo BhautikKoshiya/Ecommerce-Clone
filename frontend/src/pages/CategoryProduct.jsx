@@ -17,9 +17,17 @@ const CategoryProduct = () => {
     //getCatWiseProduct
     const getCatWiseProduct = async () => {
         try {
-            const { data } = await axios.get(`${BASE_URL}/api/v1/product/product-category/${params.slug}`)
-            setCatWiseProduct(data?.products)
-            setCategory(data?.category)
+            const requestBody = {
+                category: params.slug
+            };
+            const res  = await axios.post(`${BASE_URL}/fetchProductByCategory`, requestBody, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            console.log("res", res);
+            setCatWiseProduct(res.data.body.products);
+            setCategory(res.data.body.category);
         } catch (error) {
             console.log(error);
         }
@@ -40,16 +48,16 @@ const CategoryProduct = () => {
         <Layout>
             <div className="container mt-3">
                 <h5 className="text-center">Category : {category?.name}</h5>
-                <h5 className="text-center">Results found : {catWiseProduct?.length} </h5>
+                <h5 className="text-center">Results found : {catWiseProduct ? catWiseProduct.length : 0} </h5>
 
                 <div className="container mt-4">
                     <div className="row row-cols-1 row-cols-md-4 g-4">
                         {
                             catWiseProduct?.map((p) => (
-                                <div className="col" key={p._id}>
+                                <div className="col" key={p.id}>
                                     <div className="card" style={{width: "18rem"}}>
                                         <img
-                                            src={`${BASE_URL}/api/v1/product/product-photo/${p._id}`}
+                                            src={p.imageUrl}
                                             className="card-img-top p-3"
                                             alt={p.name}
                                             style={{ objectFit: 'cover', height: '200px' }}
@@ -59,7 +67,7 @@ const CategoryProduct = () => {
                                             <h5 className="price-text"><span style={{ color: 'green' }}>${p.price}</span></h5>
                                             <p className="card-text">{p.description.substring(0, 30)}...</p>
                                             <div className="d-flex justify-content-between">
-                                                <button type="button" className="btn btn-outline-primary" onClick={() => navigate(`/product/${p._id}`)}>
+                                                <button type="button" className="btn btn-outline-primary" onClick={() => navigate(`/product/${p.id}`)}>
                                                 MORE DETAILS
                                                 </button>
                                                 <div style={{ width: '10px' }}></div> 

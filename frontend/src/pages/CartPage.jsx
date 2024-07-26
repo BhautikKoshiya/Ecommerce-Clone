@@ -25,7 +25,7 @@ const CartPage = () => {
     const removeCartItem = (pid) => {
         try {
             let myCart = [...cart];
-            let index = myCart.findIndex((item) => item._id === pid);
+            let index = myCart.findIndex((item) => item.id === pid);
             myCart.splice(index, 1);
             setCart(myCart);
             localStorage.setItem('cartProduct', JSON.stringify(myCart));
@@ -38,7 +38,7 @@ const CartPage = () => {
     const updateCartItemQuantity = (pid, quantity) => {
         try {
             let myCart = [...cart];
-            let index = myCart.findIndex((item) => item._id === pid);
+            let index = myCart.findIndex((item) => item.id === pid);
             if (index !== -1) {
                 myCart[index].quantity = quantity;
                 setCart(myCart);
@@ -63,36 +63,38 @@ const CartPage = () => {
     };
 
     // getClientToken
-    const getClientToken = async () => {
-        try {
-            const { data } = await axios.get(`${BASE_URL}/api/v1/product/braintree/token`);
-            setClientToken(data?.response?.clientToken);
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    // const getClientToken = async () => {
+    //     try {
+    //         const { data } = await axios.get(`${BASE_URL}/api/v1/product/braintree/token`);
+    //         setClientToken(data?.response?.clientToken);
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
+    // const handlePayment = () => {
+    //     message.success("Payment Successful")
+    // }
     // handlePayment
     const handlePayment = async () => {
         console.log('handlePayment invoked');
         try {
+            const authData = localStorage.getItem("authData");
+            const userId = JSON.parse(authData).user.email;
             setLoading(true);
-            const { nonce } = await instance.requestPaymentMethod();
-            const { data } = await axios.post(
-                `${BASE_URL}/api/v1/product/braintree/payment`,
-                { nonce, cart },
-                {
-                    headers: {
-                        Authorization: `Bearer ${auth?.token}`,
-                    },
-                }
+            const requestBody = {
+                cart:cart,
+                userId: userId
+            }
+            const res = await axios.post(
+                `${BASE_URL}/createOrder`,
+                { requestBody },
             );
-            if (data?.success) {
+            if (res.data.body.success) {
                 setLoading(false);
-                console.log('data in handlePayment ', data);
                 localStorage.removeItem('cartProduct');
                 setCart([]);
-                message.success('Payment Completed Successfully!!');
+                message.success('Order Completed Successfully!!');
             } else {
                 console.log('Something went wrong!!');
             }
@@ -101,9 +103,9 @@ const CartPage = () => {
             setLoading(false);
         }
     };
-    useEffect(() => {
-        getClientToken();
-    }, [auth?.token]);
+    // useEffect(() => {
+    //     getClientToken();
+    // }, [auth?.token]);
 
     return (
         <Layout>
@@ -125,10 +127,10 @@ const CartPage = () => {
                     <div className="col-md-7">
                         {cart?.map((p) => {
                             return (
-                                <div className="row mb-2 p-3 card flex-row" key={p._id}>
+                                <div className="row mb-2 p-3 card flex-row" key={p.id}>
                                     <div className="col-md-4 border rounded">
                                         <img
-                                            src={`${BASE_URL}/api/v1/product/product-photo/${p._id}`}
+                                            src={p.imageUrl}
                                             className="card-img-top"
                                             alt={p.name}
                                         />
@@ -142,7 +144,7 @@ const CartPage = () => {
                                             <button
                                                 type="button"
                                                 className="btn btn-outline-secondary btn-sm"
-                                                onClick={() => updateCartItemQuantity(p._id, p.quantity - 1)}
+                                                onClick={() => updateCartItemQuantity(p.id, p.quantity - 1)}
                                                 disabled={p.quantity <= 1}
                                             >
                                                 -
@@ -151,7 +153,7 @@ const CartPage = () => {
                                             <button
                                                 type="button"
                                                 className="btn btn-outline-secondary btn-sm"
-                                                onClick={() => updateCartItemQuantity(p._id, p.quantity + 1)}
+                                                onClick={() => updateCartItemQuantity(p.id, p.quantity + 1)}
                                             >
                                                 +
                                             </button>
@@ -159,7 +161,7 @@ const CartPage = () => {
                                         <button
                                             type="button"
                                             className="btn btn-outline-danger mt-3"
-                                            onClick={() => removeCartItem(p._id)}
+                                            onClick={() => removeCartItem(p.id)}
                                         >
                                             Remove
                                         </button>
@@ -208,23 +210,23 @@ const CartPage = () => {
                         )}
 
                         <div className="mt-2">
-                            {!clientToken || !cart.length ? (
+                            {/* {!clientToken || !cart.length ? (
                                 ''
-                            ) : (
+                            ) : ( */}
                                 <>
-                                    <DropIn
+                                    {/* <DropIn
                                         options={{ authorization: clientToken, paypal: { flow: 'vault' } }}
                                         onInstance={(instance) => setInstance(instance)}
-                                    />
+                                    /> */}
                                     <button
                                         className="btn btn-success"
                                         onClick={handlePayment}
-                                        disabled={!instance || !auth?.user?.address}
+                                        // disabled={!instance || !auth?.user?.address}
                                     >
                                         {loading ? 'Processing..' : 'Make Payment'}
                                     </button>
                                 </>
-                            )}
+                            {/* )} */}
                         </div>
                     </div>
                 </div>

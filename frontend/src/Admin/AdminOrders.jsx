@@ -17,32 +17,27 @@ const AdminOrders = () => {
     //getAllOrders
     const getAllOrders = async () => {
         try {
-            const { data } = await axios.get(`${BASE_URL}/api/v1/auth/all-orders`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${auth?.token}`
-                    }
-                })
-            if (data?.success) {
-                setOrders(data?.orders)
+            const res  = await axios.get(`${BASE_URL}/fetchAllOrders`)
+            if (res.data.body.success) {
+                setOrders(res.data?.body.orders)
             }
         } catch (error) {
             console.log(error);
         }
     }
     // handleOrderStatus
-    const handleOrderStatus = async (orderId, value) => {
-        try {
-            await axios.put(`${BASE_URL}/api/v1/auth/order-status/${orderId}`, { status: value }, {
-                headers: {
-                    Authorization: `Bearer ${auth?.token}`
-                }
-            })
-            getAllOrders()
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    // const handleOrderStatus = async (orderId, value) => {
+    //     try {
+    //         await axios.put(`${BASE_URL}/api/v1/auth/order-status/${orderId}`, { status: value }, {
+    //             headers: {
+    //                 Authorization: `Bearer ${auth?.token}`
+    //             }
+    //         })
+    //         getAllOrders()
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
 
     useEffect(() => {
         if (auth?.token) {
@@ -62,27 +57,27 @@ const AdminOrders = () => {
                         {
                             orders?.map((o, i) => {
                                 return (
-                                    <div className="border shadow" key={o._id}>
+                                    <div className="border shadow" key={o.orderId}>
                                         <table className="table">
                                             <thead>
                                                 <tr>
                                                     <th scope="col">Sr No.</th>
-                                                    <th scope="col">Status</th>
+                                                    {/* <th scope="col">Status</th> */}
                                                     <th scope="col">Buyer</th>
                                                     <th scope="col">Orders</th>
-                                                    <th scope="col">Payment</th>
+                                                    {/* <th scope="col">Payment</th> */}
                                                     <th scope="col">Quantity</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
                                                     <td scope="row">{i + 1}</td>
-                                                    <td>
+                                                    {/* <td>
                                                         <Select
                                                             bordered={false}
                                                             defaultValue={o?.status}
                                                             style={{ width: 120 }}
-                                                            onChange={(value) => handleOrderStatus(o._id, value)}
+                                                            // onChange={(value) => handleOrderStatus(o._id, value)}
                                                         >
                                                             {
                                                                 status?.map((s, i) => {
@@ -92,23 +87,23 @@ const AdminOrders = () => {
                                                                 })
                                                             }
                                                         </Select>
-                                                    </td>
-                                                    <td>{o?.buyer?.name}</td>
+                                                    </td> */}
+                                                    <td>{o?.userId}</td>
                                                     <td>{moment(o?.crearedAt).fromNow()}</td>
-                                                    <td>{o?.payment?.success ? "Success" : "Failed"}</td>
-                                                    <td>{o?.products?.length}</td>
+                                                    {/* <td>{o?.payment?.success ? "Success" : "Failed"}</td> */}
+                                                    <td>{JSON.parse(o?.products)?.length}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
 
                                         <div className="container">
                                             {
-                                                o?.products?.map((p) => {
+                                                JSON.parse(o?.products)?.map((p) => {
                                                     return (
-                                                        <div className="row mb-2 p-3 card flex-row" key={p._id}>
+                                                        <div className="row mb-2 p-3 card flex-row" key={p.id}>
                                                             <div className="col-md-4">
                                                                 <img
-                                                                    src={`${BASE_URL}/api/v1/product/product-photo/${p._id}`}
+                                                                    src={p.imageUrl}
                                                                     className="card-img-top"
                                                                     alt={p.name}
                                                                 />

@@ -26,16 +26,23 @@ const UpdateProduct = () => {
     //get single product
     const getSingleProduct = async () => {
         try {
-            const { data } = await axios.get(`${BASE_URL}/api/v1/product/single-product/${params.id}`)
-
-            if (data?.success) {
-                setName(data.product.name)
-                setDescription(data.product.description)
-                setId(data.product._id)
-                setPrice(data.product.price)
-                setQuantity(data.product.quantity)
-                setCategory(data.product.category._id)
-                setShipping(data.product.shipping)
+            const requestBody = {
+                productId: params.id
+            };
+            const { res } = await axios.get(`${BASE_URL}/getSingleProduct`, requestBody, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            console.log("product name", res.data.body.success.product.name);
+            if (res.data.body.success) {
+                setName(res.data.body.success.product.name)
+                setDescription(res.product.description)
+                setId(res.product.id)
+                setPrice(res.product.price)
+                setQuantity(res.product.quantity)
+                setCategory(res.product.category.id)
+                setShipping(res.product.shipping)
             }
         } catch (error) {
             console.log(error);
@@ -49,7 +56,8 @@ const UpdateProduct = () => {
     //getAll Categories
     const getAllCategory = async () => {
         try {
-            const { data } = await axios.get(`${BASE_URL}/api/v1/category/get-category`)
+            const { data } = await axios.get(`${BASE_URL}/getCategory`)
+            console.log("3 ", data);
 
             if (data?.success) {
                 setCategories(data.categories)
@@ -137,7 +145,7 @@ const UpdateProduct = () => {
                                 >
                                     {
                                         categories?.map((c) => {
-                                            return <Option key={c._id} value={c._id}>{c.name}</Option>
+                                            return <Option key={c.id} value={c.id}>{c.name}</Option>
                                         })
                                     }
 

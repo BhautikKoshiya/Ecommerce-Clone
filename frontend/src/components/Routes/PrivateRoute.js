@@ -12,13 +12,15 @@ const PrivateRoute = () => {
 
     useEffect(() => {
         const authCheck = async () => {
-            const res = await axios.get(`${BASE_URL}/api/v1/auth/user-auth`, {
-                headers: {
-                    Authorization: `Bearer ${auth?.token}`
-                }
-            })
+            // const res = await axios.get(`${BASE_URL}/api/v1/auth/user-auth`, {
+            //     headers: {
+            //         Authorization: `Bearer ${auth?.token}`
+            //     }
+            // })
+            const role = localStorage.getItem("authData");
+                const jsonObject = JSON.parse(role);
 
-            if (res.data.ok) {
+            if (jsonObject.user.role === 0) {
                 setOk(true)
             } else {
                 setOk(false)
